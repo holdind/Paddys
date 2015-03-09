@@ -1,0 +1,76 @@
+---
+##March 3, 2015
+
+```{r, echo=FALSE, message=FALSE}
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+if (!require(plyr)) install.packages("plyr")
+library(plyr)
+if (!require(reshape)) install.packages("reshape")
+library(reshape)
+
+setwd("C:/Users/Dane/Desktop/r")
+file <- "paddys.csv"
+paddysorig <- read.csv(file)
+
+paddysorig <- paddysorig[,1:121]
+vars1 <- names(paddysorig) %in% c("Month", "date", "Year", "id", "teamname", "teamsize", "teamtotal",
+                                  "victorration", "female", "midrank", "endrank", "rank_change_mid_end ",
+                                  "hostaaron", "hosterica", "hostrob", "columbia", "trivia_event", "week_id",
+                                  "bukkaketsunami", "scoutsbutthole", "annie", "chien", "bill", "chris", "dane", "david",
+                                  "isaac", "jamie", "jimmy", "lindsee", "liz", "Michael", "rachel", "totteams",
+                                  "tim", "funniestname", "funniestanswer", "reportedpoints", "tpoints", "reporteddif",
+                                  "leadfinal", "secondfinal", "thirdfinal", "mn_bonus", "lindsay", "lindsaysfriend",
+                                  "shirt", "history", "artent", "sciencenat", "current", "wtf", "fb_bonus",
+                                  "theme1", "theme2", "finalguess", "russia", "juan", "igor", "peter", "adjustedendrank", "rankdif",
+                                  "bob", "dave", "charlie", "snowpiercer", "week_id", "Jeopardy")
+paddysclean <- paddysorig[vars1]
+
+vars2 <- names(paddysclean) %in% c("Month", "date", "Year", "id", "teamname", "teamsize", "teamtotal",
+                                   "victorration", "female", "midrank", "endrank", "rank_change_mid_end ",
+                                   "hostaaron", "hosterica", "hostrob", "columbia", "trivia_event", "week_id", 
+                                   "bukkaketsunami", "scoutsbutthole", "funniestname", "funniestanswer", 
+                                   "reportedpoints", "tpoints", "reporteddif", "totteams",
+                                   "leadfinal", "secondfinal", "thirdfinal", "mn_bonus", "lindsay", "lindsaysfriend",
+                                   "shirt", "history", "artent", "sciencenat", "current", "wtf", "fb_bonus",
+                                   "theme1", "theme2", "finalguess", "adjustedendrank", "russia", "rankdif", "bob", "dave", 
+                                   "charlie", "snowpiercer", "week_id", "Jeopardy")
+
+mar3data <- paddysclean[ which(paddysclean$week_id=="3mar15"), ]
+mar3data <- mar3data[vars2]
+mar3data$Trivia_date <- "March 3rd, 2015"
+
+Totaldensity <- qplot(tpoints, data=mar3data, geom = "density", alpha=1, fill=Trivia_date)
+
+vars3 <- names(mar3data) %in% c("teamname", "history", "artent", "sciencenat", "current", "wtf")
+mar3round1 <- mar3data[vars3]
+meltmar3r1 <- melt(mar3round1, id = "teamname")
+
+Round1<-qplot(value, data=meltmar3r1, geom = "density", alpha=1, fill=variable,)+facet_wrap(~variable, ncol=2)
+
+vars4 <- names(mar3data) %in% c("teamname", "theme1", "theme2")
+mar3round2 <- mar3data[vars4]
+meltmar3r2 <- melt(mar3round2, id = "teamname")
+
+Round2<- qplot(value, data=meltmar3r2, geom = "density", alpha=1, fill=variable,)+facet_wrap(~variable, ncol=1)
+```
+
+###Distribution of all teams' final scores on March 3, 2015
+
+```{r, fig.height=5, fig.width=12, echo=FALSE}
+plot(Totaldensity)
+```
+
+###Distribution of each team's Round 1 Score, broken down by category.
+
+```{r, fig.height=8, fig.width=12, echo=FALSE}
+plot(Round1)
+```
+
+###Distribution of each team's Round 2 Score, broken down by category.
+
+```{r, fig.height=7, fig.width=12, echo=FALSE}
+plot(Round2)
+```
+
+###(Everyone got the final Jeopardy Correct.)title: "Untitled"
